@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %}Submit Claim | ClaimWise{% endblock %}
+{% block content %}
+<section class="page-heading">
+    <div>
+        <p class="eyebrow">CUSTOMER PORTAL</p>
+        <h1>Submit an insurance claim</h1>
+        <p class="muted">Enter the details below to start the claim review.</p>
+    </div>
+</section>
+
+<form class="panel form-panel" method="POST" action="{{ url_for('submit_claim') }}" id="claimForm">
+    <h2>Customer information</h2>
+    <div class="form-grid">
+        <label>Customer name *
+            <input name="customer_name" required maxlength="100" placeholder="Enter full name">
+        </label>
+        <label>Email address *
+            <input name="email" type="email" required maxlength="120" placeholder="name@example.com">
+        </label>
+        <label>Policy number *
+            <input name="policy_number" required maxlength="50" placeholder="e.g. POL-10025">
+        </label>
+        <label class="checkbox-label">
+            <input type="checkbox" name="policy_active" checked>
+            Policy is currently active
+        </label>
+    </div>
+
+    <hr>
+    <h2>Claim information</h2>
+    <div class="form-grid">
+        <label>Claim type *
+            <select name="claim_type" required>
+                <option value="">Select claim type</option>
+                <option>Health</option>
+                <option>Vehicle</option>
+                <option>Property</option>
+                <option>Travel</option>
+                <option>Other</option>
+            </select>
+        </label>
+        <label>Claim amount (₹) *
+            <input name="claim_amount" type="number" min="1" step="0.01" required placeholder="Enter amount">
+        </label>
+    </div>
+    <label>Description *
+        <textarea name="description" rows="5" required maxlength="1500"
+                  placeholder="Describe what happened and why you are submitting this claim..."></textarea>
+    </label>
+    <p class="hint">* Required fields. This demo does not upload or verify supporting documents.</p>
+    <div class="form-actions">
+        <a class="button secondary" href="{{ url_for('index') }}">Cancel</a>
+        <button class="button" type="submit">Submit and review claim</button>
+    </div>
+</form>
+{% endblock %}

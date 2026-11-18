@@ -1,0 +1,7 @@
+venv/
+.venv/
+__pycache__/
+*.pyc
+.env
+insurance_claims.db
+.DS_Store

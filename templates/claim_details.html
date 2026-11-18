@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block title %}Claim #{{ claim.id }} | ClaimWise{% endblock %}
+{% block content %}
+<section class="page-heading">
+    <div>
+        <p class="eyebrow">CLAIM RECORD</p>
+        <h1>Claim #{{ claim.id }}</h1>
+        <p class="muted">Submitted on {{ claim.created_at }}</p>
+    </div>
+    <a class="button secondary" href="{{ url_for('index') }}">Back to dashboard</a>
+</section>
+
+<section class="decision-card">
+    <div>
+        <p class="eyebrow">AUTOMATED REVIEW RESULT</p>
+        <h2>{{ claim.decision }}</h2>
+        <p>{{ claim.reason }}</p>
+    </div>
+    <span class="status {{ claim.decision|lower }}">{{ claim.decision }}</span>
+</section>
+
+<section class="details-grid">
+    <article class="panel">
+        <h2>Customer details</h2>
+        <dl>
+            <dt>Name</dt><dd>{{ claim.customer_name }}</dd>
+            <dt>Email</dt><dd>{{ claim.email }}</dd>
+            <dt>Policy number</dt><dd>{{ claim.policy_number }}</dd>
+            <dt>Policy status</dt><dd>{{ "Active" if claim.policy_active else "Inactive" }}</dd>
+        </dl>
+    </article>
+    <article class="panel">
+        <h2>Claim details</h2>
+        <dl>
+            <dt>Claim type</dt><dd>{{ claim.claim_type }}</dd>
+            <dt>Claim amount</dt><dd>₹{{ "%.2f"|format(claim.claim_amount) }}</dd>
+            <dt>Submitted</dt><dd>{{ claim.created_at }}</dd>
+        </dl>
+    </article>
+</section>
+
+<section class="panel">
+    <h2>Incident description</h2>
+    <p class="description">{{ claim.description }}</p>
+</section>
+
+<section class="panel">
+    <h2>Previous claim history</h2>
+    {% if history %}
+    <div class="table-wrap">
+        <table>
+            <thead><tr><th>Claim ID</th><th>Type</th><th>Amount</th><th>Decision</th><th>Date</th></tr></thead>
+            <tbody>
+            {% for item in history %}
+            <tr>
+                <td><a class="text-link" href="{{ url_for('claim_details', claim_id=item.id) }}">#{{ item.id }}</a></td>
+                <td>{{ item.claim_type }}</td>
+                <td>₹{{ "%.2f"|format(item.claim_amount) }}</td>
+                <td><span class="status {{ item.decision|lower }}">{{ item.decision }}</span></td>
+                <td>{{ item.created_at }}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <p class="muted">No previous claims found for this email address.</p>
+    {% endif %}
+</section>
+{% endblock %}

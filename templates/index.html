@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block title %}Dashboard | ClaimWise{% endblock %}
+{% block content %}
+<section class="page-heading">
+    <div>
+        <p class="eyebrow">OVERVIEW</p>
+        <h1>Claims Dashboard</h1>
+        <p class="muted">Monitor submitted claims and their review decisions.</p>
+    </div>
+    <a class="button" href="{{ url_for('submit_claim') }}">Submit a claim</a>
+</section>
+
+<section class="stats-grid">
+    <article class="stat-card"><span>Total claims</span><strong>{{ totals.total or 0 }}</strong></article>
+    <article class="stat-card"><span>Approved</span><strong class="green">{{ totals.approved or 0 }}</strong></article>
+    <article class="stat-card"><span>Rejected</span><strong class="red">{{ totals.rejected or 0 }}</strong></article>
+    <article class="stat-card"><span>Escalated</span><strong class="orange">{{ totals.escalated or 0 }}</strong></article>
+</section>
+
+<section class="panel">
+    <div class="panel-heading">
+        <div>
+            <h2>Recent claims</h2>
+            <p class="muted">Select a claim to view its assessment and history.</p>
+        </div>
+        <input id="claimSearch" class="search" type="search" placeholder="Search claims...">
+    </div>
+
+    {% if claims %}
+    <div class="table-wrap">
+        <table id="claimsTable">
+            <thead><tr>
+                <th>Claim ID</th><th>Customer</th><th>Claim type</th>
+                <th>Amount</th><th>Decision</th><th>Date</th><th></th>
+            </tr></thead>
+            <tbody>
+            {% for claim in claims %}
+                <tr>
+                    <td>#{{ claim.id }}</td>
+                    <td>{{ claim.customer_name }}</td>
+                    <td>{{ claim.claim_type }}</td>
+                    <td>₹{{ "%.2f"|format(claim.claim_amount) }}</td>
+                    <td><span class="status {{ claim.decision|lower }}">{{ claim.decision }}</span></td>
+                    <td>{{ claim.created_at }}</td>
+                    <td><a class="text-link" href="{{ url_for('claim_details', claim_id=claim.id) }}">View</a></td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+        <div class="empty-state">
+            <div class="empty-icon">📄</div>
+            <h3>No claims submitted yet</h3>
+            <p class="muted">Submit your first claim to see it listed here.</p>
+            <a class="button" href="{{ url_for('submit_claim') }}">Create first claim</a>
+        </div>
+    {% endif %}
+</section>
+{% endblock %}
